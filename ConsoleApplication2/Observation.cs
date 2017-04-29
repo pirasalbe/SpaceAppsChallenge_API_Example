@@ -14,11 +14,9 @@ namespace ConsoleApplication2
         public string time_observed_at_utc;
         public string place_guess;
         public string species_guess;
-        public string quality_grade;
-        public string num_identification_disagreements;
 
         [JsonConstructor]
-        public Observation(string id, string latitude, string longitude, string time_observed_at_utc, string place_guess, string species_guess, string quality_grade, string num_identification_disagreements)
+        public Observation(string id, string latitude, string longitude, string time_observed_at_utc, string place_guess, string species_guess)
         {
             this.id = id;
             this.latitude = latitude;
@@ -26,8 +24,6 @@ namespace ConsoleApplication2
             this.time_observed_at_utc = time_observed_at_utc;
             this.place_guess = place_guess;
             this.species_guess = species_guess;
-            this.quality_grade = quality_grade;
-            this.num_identification_disagreements = num_identification_disagreements;
         }
     }
 }

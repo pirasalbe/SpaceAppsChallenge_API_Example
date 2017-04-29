@@ -65,9 +65,9 @@ namespace ConsoleApplication2
                 }
             }
             page = 0;
+            end = true;
             
-            
-            while (true)
+            while (end)
             {
                 var request = WebRequest.Create(url + observationParams + "&swlat=" + countrySelected.swlat + "&swlng=" + countrySelected.swlng + "&nelat=" + countrySelected.nelat + "&nelng=" + countrySelected.nelng + "&page=" + page + "&year=" + year + "&month=" + month + "&day=" + day );
                 request.ContentType = "application/json; charset=utf-8";
@@ -78,13 +78,37 @@ namespace ConsoleApplication2
                 {
                     text = sr.ReadToEnd();
                     List<Observation> tmp = JsonConvert.DeserializeObject<List<Observation>>(text);
+                    if (tmp.Count == 0)
+                    {
+                        end = false;
+                    }
                     obs.AddRange(tmp);
 
                 }
                 page++;
             }
+            page = 0;
+
+            List<ObservationDetail> obsDetails = new List<ObservationDetail>();
+            foreach(Observation observation in obs)
+            {
+                var request = WebRequest.Create(url + "observations/" + observation.id + ".json");
+                request.ContentType = "application/json; charset=utf-8";
+                var response = (HttpWebResponse)request.GetResponse();
+
+
+                using (var sr = new StreamReader(response.GetResponseStream()))
+                {
+                    text = sr.ReadToEnd();
+                    ObservationDetail tmp = JsonConvert.DeserializeObject<ObservationDetail>(text);
+                    obsDetails.Add(tmp);
+
+                }
+            }
+                
             
-            
+
+
 
 
         }
