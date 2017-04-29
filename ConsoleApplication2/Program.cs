@@ -19,7 +19,13 @@ namespace ConsoleApplication2
         {
             Console.WriteLine("Insert country: ");
             string country = Console.ReadLine();
-            
+            Console.WriteLine("Insert year: ");
+            string year = Console.ReadLine();
+            Console.WriteLine("Insert month: ");
+            string month = Console.ReadLine();
+            Console.WriteLine("Insert day: ");
+            string day = Console.ReadLine();
+
             string text;
             int page = 1;
 
@@ -60,9 +66,10 @@ namespace ConsoleApplication2
             }
             page = 0;
             
+            
             while (true)
             {
-                var request = WebRequest.Create(url + observationParams + "&swlat=" + countrySelected.swlat + "&swlng=" + countrySelected.swlng + "&nelat=" + countrySelected.nelat + "&nelng=" + countrySelected.nelng + "&page=" + page);
+                var request = WebRequest.Create(url + observationParams + "&swlat=" + countrySelected.swlat + "&swlng=" + countrySelected.swlng + "&nelat=" + countrySelected.nelat + "&nelng=" + countrySelected.nelng + "&page=" + page + "&year=" + year + "&month=" + month + "&day=" + day );
                 request.ContentType = "application/json; charset=utf-8";
                 var response = (HttpWebResponse)request.GetResponse();
 
