@@ -21,33 +21,50 @@ namespace ConsoleApplication2
             string country = Console.ReadLine();
             
             string text;
-            List<Observation> obs = new List<Observation>();
-            
-            var request = WebRequest.Create(url + placesParams);
-            request.ContentType = "application/json; charset=utf-8";
+            int page = 1;
 
-            var response = (HttpWebResponse)request.GetResponse();
-            List<Place> places;
+            List<Observation> obs = new List<Observation>();
+            List<Place> places = new List<Place>();
             Place countrySelected = new Place();
-            using (var sr = new StreamReader(response.GetResponseStream()))
+            bool end = true;
+            while (end)
             {
-                text = sr.ReadToEnd();
-                places = JsonConvert.DeserializeObject<List<Place>>(text);
+                var request = WebRequest.Create(url + placesParams + "&page=" + page);
+                request.ContentType = "application/json; charset=utf-8";
+
+                var response = (HttpWebResponse)request.GetResponse();
                 
-                foreach(Place place in places)
+                
+
+                using (var sr = new StreamReader(response.GetResponseStream()))
                 {
-                    if(place.name == country)
+                    text = sr.ReadToEnd();
+                    List<Place> tmp = JsonConvert.DeserializeObject<List<Place>>(text);
+                    if(tmp.Count == 0)
                     {
-                        countrySelected = place;
+                        end = false;
                     }
+                    places.AddRange(tmp); 
+
+                    page++;
                 }
             }
-            int page = 0;
+            
+
+            foreach (Place place in places)
+            {
+                if (place.name == country)
+                {
+                    countrySelected = place;
+                }
+            }
+            page = 0;
+            
             while (true)
             {
-                request = WebRequest.Create(url + observationParams + "&swlat=" + countrySelected.swlat + "&swlng=" + countrySelected.swlng + "&nelat=" + countrySelected.nelat + "&nelng=" + countrySelected.nelng + "&page=" + page);
+                var request = WebRequest.Create(url + observationParams + "&swlat=" + countrySelected.swlat + "&swlng=" + countrySelected.swlng + "&nelat=" + countrySelected.nelat + "&nelng=" + countrySelected.nelng + "&page=" + page);
                 request.ContentType = "application/json; charset=utf-8";
-                response = (HttpWebResponse)request.GetResponse();
+                var response = (HttpWebResponse)request.GetResponse();
 
 
                 using (var sr = new StreamReader(response.GetResponseStream()))
